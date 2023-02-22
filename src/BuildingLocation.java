@@ -1,5 +1,5 @@
 import java.io.Serializable;
-
+//test
 public class BuildingLocation implements Serializable {
     protected String buildingLocation;
 
