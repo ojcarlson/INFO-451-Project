@@ -1,7 +1,12 @@
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 public class InventorySystem {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
+        //connection to Inventory schema in database
+        //Connection connection = DatabaseConnection.getConnection();
+
         BuildingLocation buildingLocation;
         InventoryAccount inventoryAccount;
         ArrayList<Inventory> inventory = new ArrayList<>();
@@ -23,20 +28,22 @@ public class InventorySystem {
 
             switch (choice) {
                 case 1:
-                    searchInventoryAccount(inventory);
+                    //searchInventoryAccount(inventory);
                     break;
 
                 case 2:
-                    inventoryAccount = createInventoryAccount();
-                    inventory.add(inventoryAccount);
+                    createInventoryAccount();
+                    //inventory.add(inventoryAccount);
                     System.out.println();
                     break;
                 case 3:
-                    removeInventory(inventory);
+                    //removeInventory(inventory);
                     break;
 
                 case 5:
-                    displayBuildingInventory(inventory);
+                    //displayTables ();
+                    //DisplayTableValues();
+                    //displayBuildingInventory(inventory);
                     break;
 
                 case 6:
@@ -48,6 +55,81 @@ public class InventorySystem {
 
         }
     }
+
+
+    public static void displayTables() throws SQLException {
+        Connection connection = DatabaseConnection.getConnection();
+
+        Statement statement;
+        statement = connection.createStatement();
+        ResultSet resultSet;
+        resultSet = statement.executeQuery(
+                "select * from Inventory");
+        int code;
+        String title;
+        while (resultSet.next()) {
+            buildingLocation = resultSet.getString("buildingLocation");
+            heci = resultSet.getString("heci");
+            description = resultSet.getString("desciption");
+            cost = resultSet.getDouble("cost");
+            bayLocation = resultSet.getDouble("bayLocation");
+            status = resultSet.getString("status");
+            quantity = resultSet.getInt("heci").trim();
+
+            System.out.println("buildingLocation : " + buildingLocation
+                    + " heci : " + heci + "description : " + description
+                    + " cost: " + cost + " bayLocation: " + bayLocation
+                    + " status: " + status + " quantity: " + quantity);
+        }
+        resultSet.close();
+        statement.close();
+        connection.close();
+
+        catch(Exception exception)
+
+        {
+        System.out.println(exception);
+        }
+    // function ends
+}
+
+
+        /*public static void displayTables () throws SQLException {
+            Connection connection = DatabaseConnection.getConnection();
+            String query = "select buildingLocation, heci, description, cost, bayLocation, status, quantity";
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery(query);
+                while (rs.next()) {
+
+                    String buildingLocation = rs.getString("buildingLocation");
+                    String heci = rs.getString("heci");
+                    String description = rs.getString("PRICE");
+                    double cost = rs.getDouble("SALES");
+                    double bayLocation = rs.getInt("TOTAL");
+                    System.out.println(buildingLocation + ", " + heci + ", " + description +
+                            ", " + cost + ", " + bayLocation);
+                }
+            } catch (SQLException e) {
+                JDBCTutorialUtilities.printSQLException(e);
+            }
+        }
+*/
+
+
+
+            /*
+            Statement dt = connection.createStatement();
+            String query = "SELECT * FROM Inventory;";
+            dt.executeQuery(query);
+
+            dt.close();
+            connection.close();
+            }
+            */
+
+
+
+
     /*
             INCLUDE IN CODE
           public static void changeQuantity(ArrayList<Inventory>inventory)
@@ -88,11 +170,9 @@ public class InventorySystem {
     }
 
 
+    public static void createInventoryAccount() throws SQLException {
+        Connection connection = DatabaseConnection.getConnection();
 
-
-
-
-    public static InventoryAccount createInventoryAccount() {
         Scanner s = new Scanner(System.in);
         BuildingLocation buildingLocation = new BuildingLocation();
         System.out.print("Please input 2 digit state and four digit Building Location: ");
@@ -124,8 +204,15 @@ public class InventorySystem {
         System.out.println();
 
         System.out.println("Building account created successfully!");
-        return new InventoryAccount(heciNumber, descriptionEquip,
-                costEquip, bayLocationEquip, statusEquip, quantityEquip, buildingLocation);
+        Statement st = connection.createStatement();
+        st.execute("INSERT INTO Inventory (buildingLocation, heci, description, cost, bayLocation, status, quantity) VALUES ( "+ buildingLocation + ", " + heciNumber + ", " + descriptionEquip + ", " + costEquip + ", " + bayLocationEquip + ", " + statusEquip + ", " + quantityEquip + ")" );
+
+
+        st.close();
+        connection.close();
+        //return new InventoryAccount(heciNumber, descriptionEquip,
+         //       costEquip, bayLocationEquip, statusEquip, quantityEquip, buildingLocation);
+
     }
     public static void displayBuildingInventory(ArrayList<Inventory>inventory) {
         Inventory buildingLocationExists = null;
@@ -190,6 +277,7 @@ public class InventorySystem {
         return keepGoing;
 
     }
+
 
  /*public static InventoryAccount createInventoryAccount() {
         Scanner s = new Scanner(System.in);
