@@ -28,7 +28,7 @@ public class InventorySystem {
 
             switch (choice) {
                 case 1:
-                    //searchInventoryAccount(inventory);
+                    searchInventoryAccount(inventory);
                     break;
 
                 case 2:
@@ -37,6 +37,7 @@ public class InventorySystem {
                     System.out.println();
                     break;
                 case 3:
+                    removeInventory();
                     //removeInventory(inventory);
                     break;
 
@@ -56,8 +57,48 @@ public class InventorySystem {
         }
     }
 
+    public static void searchInventory() throws SQLException {
+        Connection connection = DatabaseConnection.getConnection();
+        Scanner s = new Scanner(System.in);
 
-    public static void displayTables() throws SQLException {
+        BuildingLocation buildingLocation = new BuildingLocation();
+        System.out.print("Please input 2 digit state and four digit Building Location: ");
+        buildingLocation.setBuildingLocation(s.nextLine());
+        System.out.println();
+
+        System.out.print("Please input the equipment Status: ");
+        String statusEquip = s.nextLine();
+        System.out.println();
+
+
+        System.out.print("Please input the equipment HECI: ");
+        String heciNumber = s.nextLine();
+        System.out.println();
+
+        SELECT buildingLocation = buildingLocation, status = statusEquip FROM Inventory;
+
+    }
+    public static void removeInventory() throws SQLException {
+        Connection connection = DatabaseConnection.getConnection();
+
+
+        Scanner s = new Scanner(System.in);
+        System.out.print("Please input the equipment HECI: ");
+        String heciNumber = s.nextLine();
+        System.out.println();
+
+        BuildingLocation buildingLocation = new BuildingLocation();
+        System.out.print("Please input 2 digit state and four digit Building Location: ");
+        buildingLocation.setBuildingLocation(s.nextLine());
+        System.out.println();
+
+        //DELETE Inventory WHERE heci = 'heciNumber' AND 'buildingLocation';
+
+
+
+    }
+
+    /*public static void displayTables() throws SQLException {
         Connection connection = DatabaseConnection.getConnection();
 
         Statement statement;
@@ -91,7 +132,7 @@ public class InventorySystem {
         System.out.println(exception);
         }
     // function ends
-}
+}*/
 
 
         /*public static void displayTables () throws SQLException {
@@ -214,7 +255,7 @@ public class InventorySystem {
          //       costEquip, bayLocationEquip, statusEquip, quantityEquip, buildingLocation);
 
     }
-    public static void displayBuildingInventory(ArrayList<Inventory>inventory) {
+    /*public static void displayBuildingInventory(ArrayList<Inventory>inventory) {
         Inventory buildingLocationExists = null;
         String buildLocateEquals = getBuildingLocation();
         for (Inventory inventory1 : inventory) {
@@ -229,7 +270,7 @@ public class InventorySystem {
             System.out.println("Building Location Not Found!");
             System.out.println();
         }
-    }
+    }*/
 
 
 
@@ -253,7 +294,7 @@ public class InventorySystem {
         return heci;
     }
 
-    public static void removeInventory(ArrayList<Inventory>inventory) {
+    /*public static void removeInventory(ArrayList<Inventory>inventory) {
         Inventory inventoryTBR = null;
         String removeInventoryHeci = getHeci();
         String buildingLocateEqual = getBuildingLocation();
@@ -268,7 +309,7 @@ public class InventorySystem {
         else {inventory.remove(inventoryTBR);
             System.out.println();
         }
-    }
+    }*/
 
     public static boolean exit() {
         boolean keepGoing = true;
