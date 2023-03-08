@@ -4,23 +4,22 @@ import java.util.HashMap;
 import java.util.Scanner;
 public class InventorySystem {
     public static void main(String[] args) throws SQLException {
-        //connection to Inventory schema in database
-        //Connection connection = DatabaseConnection.getConnection();
-
         BuildingLocation buildingLocation;
         InventoryAccount inventoryAccount;
-        ArrayList<Inventory> inventory = new ArrayList<>();
         Scanner s = new Scanner(System.in);
         boolean keepGoing = true;
 
         while (keepGoing) {
             System.out.println("     Inventory Menu");
             System.out.println("_____________________________");
-            System.out.println("  1.  Search ");
-            System.out.println("  2.  Create Inventory");
-            System.out.println("  3.  Remove Inventory Equipment at Building Location");
-            System.out.println("  5.  Display Building Inventory");
-            System.out.println("  6.  Exit");
+            System.out.println("  1.  Login ");
+            System.out.println("  2.  Search Inventory and Display");
+            System.out.println("  3.  Create Inventory");
+            System.out.println("  4.  Remove Inventory Equipment at Building Location");
+            System.out.println("  5.  Display All Building Inventories");
+            System.out.println("  6.  Change Inventory Quantity Count");
+            System.out.println("  7.  Change Inventory Status");
+            System.out.println("  8.  Exit");
             System.out.println();
             System.out.print("Please input your choice <1-4>:");
 
@@ -28,196 +27,153 @@ public class InventorySystem {
 
             switch (choice) {
                 case 1:
-                    searchInventoryAccount(inventory);
+                    login();
+                    System.out.println();
                     break;
 
                 case 2:
-                    createInventoryAccount();
-                    //inventory.add(inventoryAccount);
+                    searchInventory();
                     System.out.println();
                     break;
+
                 case 3:
+                    createInventoryAccount();
+                    System.out.println();
+                    break;
+
+                case 4:
                     removeInventory();
-                    //removeInventory(inventory);
+                    System.out.println();
                     break;
 
                 case 5:
-                    //displayTables ();
-                    //DisplayTableValues();
-                    //displayBuildingInventory(inventory);
+                    displayTables ();
+                    System.out.println();
                     break;
 
-                case 6:
+                case 6: changeInventoryQty();
+                    System.out.println();
+                    break;
 
+                case 7: changeInventoryStatus();
+                    System.out.println();
+                    break;
+
+                case 8:
                     System.out.println();
                     keepGoing = false;
                     break;
             }
-
         }
     }
 
+    public static void login() throws SQLException {
+        Connection connection = DatabaseConnection.getConnection();
+        Scanner s = new Scanner(System.in);
+
+        System.out.print("Please Corporate USER NAME: ");
+        String searchUserName = s.nextLine();
+        System.out.println();
+
+        System.out.print("Please enter CORPORATE PASSWORD: ");
+        String searchPassword = s.nextLine();
+        System.out.println();
+
+        Statement statement;
+        statement = connection.createStatement();
+        ResultSet resultSet;
+
+        Statement qc = connection.createStatement();
+        resultSet = qc.executeQuery("select * from loginPassword WHERE login = '" + searchUserName +"' " +
+                "AND password = '" + searchPassword + "' ");
+
+        int code;
+        String title;
+        int count = 0;
+
+        while (resultSet.next()) {
+            count++;
+            String login = resultSet.getString("login");
+            String password = resultSet.getString("password");
+
+
+              }
+        if (count !=0) {
+            ResultSet executionworked;
+            executionworked = qc.executeQuery("select * from loginPassword WHERE login = '" + searchUserName +"' " + "AND password = '" + searchPassword + "' ");
+            System.out.println("Password Accepted!");
+            qc.close();
+            connection.close();
+        }
+        else {
+            System.out.println("Not found please try again!");
+        }
+    }
     public static void searchInventory() throws SQLException {
         Connection connection = DatabaseConnection.getConnection();
         Scanner s = new Scanner(System.in);
 
-        BuildingLocation buildingLocation = new BuildingLocation();
         System.out.print("Please input 2 digit state and four digit Building Location: ");
-        buildingLocation.setBuildingLocation(s.nextLine());
+        String searchBuildingLocation = s.nextLine();
         System.out.println();
 
         System.out.print("Please input the equipment Status: ");
         String statusEquip = s.nextLine();
         System.out.println();
 
-
         System.out.print("Please input the equipment HECI: ");
         String heciNumber = s.nextLine();
         System.out.println();
-
-        SELECT buildingLocation = buildingLocation, status = statusEquip FROM Inventory;
-
-    }
-    public static void removeInventory() throws SQLException {
-        Connection connection = DatabaseConnection.getConnection();
-
-
-        Scanner s = new Scanner(System.in);
-        System.out.print("Please input the equipment HECI: ");
-        String heciNumber = s.nextLine();
-        System.out.println();
-
-        BuildingLocation buildingLocation = new BuildingLocation();
-        System.out.print("Please input 2 digit state and four digit Building Location: ");
-        buildingLocation.setBuildingLocation(s.nextLine());
-        System.out.println();
-
-        //DELETE Inventory WHERE heci = 'heciNumber' AND 'buildingLocation';
-
-
-
-    }
-
-    /*public static void displayTables() throws SQLException {
-        Connection connection = DatabaseConnection.getConnection();
 
         Statement statement;
         statement = connection.createStatement();
         ResultSet resultSet;
-        resultSet = statement.executeQuery(
-                "select * from Inventory");
+
+        Statement qc = connection.createStatement();
+        resultSet = qc.executeQuery("select * from Inventory WHERE buildingLocation = '" + searchBuildingLocation +"' " +
+                "AND heci = '" + heciNumber +  "'  AND status = '" + statusEquip + "' ");
+
         int code;
         String title;
-        while (resultSet.next()) {
-            buildingLocation = resultSet.getString("buildingLocation");
-            heci = resultSet.getString("heci");
-            description = resultSet.getString("desciption");
-            cost = resultSet.getDouble("cost");
-            bayLocation = resultSet.getDouble("bayLocation");
-            status = resultSet.getString("status");
-            quantity = resultSet.getInt("heci").trim();
+        int count = 0;
 
+        while (resultSet.next()) {
+
+            count++;
+            String buildingLocation = resultSet.getString("buildingLocation");
+            String heci = resultSet.getString("heci");
+            String description = resultSet.getString("description");
+            Double cost = resultSet.getDouble("cost");
+            Double bayLocation = resultSet.getDouble("bayLocation");
+            String status = resultSet.getString("status");
+            int quantity = resultSet.getInt("quantity");
+
+            System.out.println("Inventory found!");
             System.out.println("buildingLocation : " + buildingLocation
                     + " heci : " + heci + "description : " + description
                     + " cost: " + cost + " bayLocation: " + bayLocation
                     + " status: " + status + " quantity: " + quantity);
         }
-        resultSet.close();
-        statement.close();
-        connection.close();
+        if (count !=0) {
+            ResultSet executionworked;
+            executionworked = qc.executeQuery("select * from Inventory WHERE buildingLocation = '" + searchBuildingLocation +"' " +
+                    "AND heci = '" + heciNumber +  "'  AND status = '" + statusEquip + "' ");
 
-        catch(Exception exception)
-
-        {
-        System.out.println(exception);
-        }
-    // function ends
-}*/
-
-
-        /*public static void displayTables () throws SQLException {
-            Connection connection = DatabaseConnection.getConnection();
-            String query = "select buildingLocation, heci, description, cost, bayLocation, status, quantity";
-            try (Statement stmt = connection.createStatement()) {
-                ResultSet rs = stmt.executeQuery(query);
-                while (rs.next()) {
-
-                    String buildingLocation = rs.getString("buildingLocation");
-                    String heci = rs.getString("heci");
-                    String description = rs.getString("PRICE");
-                    double cost = rs.getDouble("SALES");
-                    double bayLocation = rs.getInt("TOTAL");
-                    System.out.println(buildingLocation + ", " + heci + ", " + description +
-                            ", " + cost + ", " + bayLocation);
-                }
-            } catch (SQLException e) {
-                JDBCTutorialUtilities.printSQLException(e);
-            }
-        }
-*/
-
-
-
-            /*
-            Statement dt = connection.createStatement();
-            String query = "SELECT * FROM Inventory;";
-            dt.executeQuery(query);
-
-            dt.close();
+            qc.close();
             connection.close();
-            }
-            */
-
-
-
-
-    /*
-            INCLUDE IN CODE
-          public static void changeQuantity(ArrayList<Inventory>inventory)
-
-           public static void changeStatus(ArrayList<Inventory>inventory)
-
-
-
-     */
-    public static void searchInventoryAccount(ArrayList<Inventory>inventory) {
-        Scanner s = new Scanner(System.in);
-        Inventory buildingLocationExists = null;
-        Inventory buildLocateEqualsNull = null;
-        Inventory statusEqualsNull = null;
-        Inventory heciEqualsNull = null;
-        String buildingLocateEquals = getBuildingLocation();
-        String statusEquals = getStatus();
-        String heciEquals = getHeci();
-        BuildingLocation buildingLocation = new BuildingLocation();
-
-        for (Inventory inventory1 : inventory) {
-            if (inventory1.getBuildingLocation().getBuildingLocation().equals(buildingLocateEquals) &&
-                    (heciEquals.isEmpty() || inventory1.getHeci().equals(heciEquals))
-                    && (statusEquals.isEmpty() || inventory1.getStatus().equals(statusEquals)) ) {
-                buildingLocationExists = inventory1;
-                System.out.println();
-                System.out.println(inventory1);
-
-            }
-
         }
-        System.out.println();
-        if (buildingLocationExists == null) {
-            System.out.println("Building Location Not Found OR Queries Not found");
-            System.out.println();
+        else {
+            System.out.println("Not found please try again!");
         }
-
     }
-
 
     public static void createInventoryAccount() throws SQLException {
         Connection connection = DatabaseConnection.getConnection();
 
         Scanner s = new Scanner(System.in);
-        BuildingLocation buildingLocation = new BuildingLocation();
+        //BuildingLocation buildingLocation = new BuildingLocation();
         System.out.print("Please input 2 digit state and four digit Building Location: ");
-        buildingLocation.setBuildingLocation(s.nextLine());
+        String buildingLocation = s.nextLine();
         System.out.println();
 
         System.out.print("Please input the equipment HECI: ");
@@ -246,139 +202,212 @@ public class InventorySystem {
 
         System.out.println("Building account created successfully!");
         Statement st = connection.createStatement();
-        st.execute("INSERT INTO Inventory (buildingLocation, heci, description, cost, bayLocation, status, quantity) VALUES ( "+ buildingLocation + ", " + heciNumber + ", " + descriptionEquip + ", " + costEquip + ", " + bayLocationEquip + ", " + statusEquip + ", " + quantityEquip + ")" );
-
+        st.execute("INSERT INTO Inventory (buildingLocation, heci, description, cost, bayLocation, status, quantity) VALUES ( '"+ buildingLocation + "', '" + heciNumber + "', '" + descriptionEquip + "', " + costEquip + ", " + bayLocationEquip + ", '" + statusEquip + "', " + quantityEquip + ")" );
 
         st.close();
         connection.close();
         //return new InventoryAccount(heciNumber, descriptionEquip,
-         //       costEquip, bayLocationEquip, statusEquip, quantityEquip, buildingLocation);
-
+        //       costEquip, bayLocationEquip, statusEquip, quantityEquip, buildingLocation);
     }
-    /*public static void displayBuildingInventory(ArrayList<Inventory>inventory) {
-        Inventory buildingLocationExists = null;
-        String buildLocateEquals = getBuildingLocation();
-        for (Inventory inventory1 : inventory) {
-            if (inventory1.getBuildingLocation().getBuildingLocation().equals(buildLocateEquals)) {
-                buildingLocationExists = inventory1;
-                System.out.println();
-                System.out.println(inventory1);
-            }
-        }
+    public static void removeInventory() throws SQLException {
+        Connection connection = DatabaseConnection.getConnection();
+        Scanner s = new Scanner(System.in);
+
+        System.out.print("Please input 2 digit state and four digit Building Location: ");
+        String searchBuildingLocation = s.nextLine();
         System.out.println();
-        if(buildingLocationExists == null) {
-            System.out.println("Building Location Not Found!");
-            System.out.println();
+
+        System.out.print("Please input the equipment HECI: ");
+        String heciNumber = s.nextLine();
+        System.out.println();
+
+        Statement qc = connection.createStatement();
+        ResultSet resultSet = qc.executeQuery("select * from Inventory WHERE buildingLocation = '" + searchBuildingLocation +"' " +
+                "AND heci = '" + heciNumber + "' " );
+        int code;
+        String title;
+        int count = 0;
+
+        while (resultSet.next()) {
+            count++;
+            String buildingLocation = resultSet.getString("buildingLocation");
+            String heci = resultSet.getString("heci");
+            String description = resultSet.getString("description");
+            Double cost = resultSet.getDouble("cost");
+            Double bayLocation = resultSet.getDouble("bayLocation");
+            String status = resultSet.getString("status");
+            int quantity = resultSet.getInt("quantity");
         }
-    }*/
+            if (count !=0) {
+                boolean executionworked;
+                executionworked = qc.execute("DELETE FROM Inventory WHERE heci = '" + heciNumber + "' AND buildingLocation = '" + searchBuildingLocation + "';");
 
-
-
-    public static String getBuildingLocation() {
-        Scanner s = new Scanner(System.in);
-        System.out.print("Please input the 2 letter state and 4 digit building code number: ");
-        String buildingLocation = s.nextLine();
-        return buildingLocation;
-    }
-
-    public static String getHeci() {
-        Scanner s = new Scanner(System.in);
-        System.out.print("Please input the HECI: ");
-        String heci = s.nextLine();
-        return heci;
-    }
-    public static String getStatus() {
-        Scanner s = new Scanner(System.in);
-        System.out.print("Please input the Status: ");
-        String heci = s.nextLine();
-        return heci;
-    }
-
-    /*public static void removeInventory(ArrayList<Inventory>inventory) {
-        Inventory inventoryTBR = null;
-        String removeInventoryHeci = getHeci();
-        String buildingLocateEqual = getBuildingLocation();
-        for (Inventory inventory1 : inventory) {
-            if (inventory1.getHeci().equals(removeInventoryHeci) &&
-                    inventory1.getBuildingLocation().getBuildingLocation().equals(buildingLocateEqual)) {
-                inventoryTBR = inventory1;
-
+                System.out.println("Inventory Delete Successful!");
+                qc.close();
+                connection.close();
             }
+            else {
+                System.out.println("Not found please try again!");
+            }
+    }
+
+    public static void displayTables() throws SQLException {
+        Connection connection = DatabaseConnection.getConnection();
+        Statement statement;
+        statement = connection.createStatement();
+        ResultSet resultSet;
+        resultSet = statement.executeQuery(
+                "select * from Inventory");
+        int code;
+        String title;
+
+        while (resultSet.next()) {
+            String buildingLocation = resultSet.getString("buildingLocation");
+            String heci = resultSet.getString("heci");
+            String description = resultSet.getString("description");
+            Double cost = resultSet.getDouble("cost");
+            Double bayLocation = resultSet.getDouble("bayLocation");
+            String status = resultSet.getString("status");
+            int quantity = resultSet.getInt("quantity");
+
+            System.out.println("buildingLocation : " + buildingLocation
+                    + " heci : " + heci + "description : " + description
+                    + " cost: " + cost + " bayLocation: " + bayLocation
+                    + " status: " + status + " quantity: " + quantity);
         }
-        if(inventoryTBR == null) {System.out.println("Not Found");}
-        else {inventory.remove(inventoryTBR);
-            System.out.println();
+        resultSet.close();
+        statement.close();
+        connection.close();
+
+    }
+
+    public static void changeInventoryQty() throws SQLException {
+
+        Connection connection = DatabaseConnection.getConnection();
+
+        Scanner s = new Scanner(System.in);
+        System.out.print("Please input 2 digit state and four digit Building Location: ");
+        String buildingLocationEquip = s.nextLine();
+        System.out.println();
+
+        System.out.print("Please input the equipment HECI: ");
+        String heciNumber = s.nextLine();
+        System.out.println();
+
+        System.out.print("Please input the equipment Bay Location: ");
+        Double bayLocationEquip = s.nextDouble();
+        System.out.println();
+        s.nextLine();
+
+        System.out.print("Please input the equipment Status: ");
+        String statusEquip = s.nextLine();
+        System.out.println();
+
+        System.out.print("Please input the NEW QUANTITY: ");
+        Integer quantityEquip = s.nextInt();
+        System.out.println();
+
+        Statement qc = connection.createStatement();
+        ResultSet resultSet = qc.executeQuery(
+                "select * from Inventory WHERE buildingLocation = '" + buildingLocationEquip + "'  " +
+                        "AND heci = '" + heciNumber + "'  AND  bayLocation = '" + bayLocationEquip + "' " +
+                        "AND  status = '" + statusEquip + "'");
+        int code;
+        String title;
+        int count =0;
+        while (resultSet.next()) {
+            count++;
+            String buildingLocation = resultSet.getString("buildingLocation");
+            String heci = resultSet.getString("heci");
+            String description = resultSet.getString("description");
+            Double cost = resultSet.getDouble("cost");
+            Double bayLocation = resultSet.getDouble("bayLocation");
+            String status = resultSet.getString("status");
+            int quantity = resultSet.getInt("quantity");
         }
-    }*/
+
+        if (count != 0) {
+            boolean executionWorked;
+            executionWorked = qc.execute ("UPDATE Inventory SET quantity = '" + quantityEquip + "' WHERE  buildingLocation = '" + buildingLocationEquip + "'  " +
+                    "AND heci = '" + heciNumber + "'  AND  bayLocation = '" + bayLocationEquip + "' " +
+                    "AND  status = '" + statusEquip + "'");
+
+            System.out.println("Building QUANTITY changed successfully!");
+            qc.close();
+            connection.close();
+        }
+        else {
+            System.out.println("Not found please try again!");
+        }
+    }
+
+    public static void changeInventoryStatus() throws SQLException {
+
+        Connection connection = DatabaseConnection.getConnection();
+
+        Scanner s = new Scanner(System.in);
+        System.out.print("Please input 2 digit state and four digit Building Location: ");
+        String buildingLocationEquip = s.nextLine();
+        System.out.println();
+
+        System.out.print("Please input the equipment HECI: ");
+        String heciNumber = s.nextLine();
+        System.out.println();
+
+
+        System.out.print("Please input the equipment Bay Location: ");
+        Double bayLocationEquip = s.nextDouble();
+        System.out.println();
+        s.nextLine();
+
+        System.out.print("Please input the NEW equipment Status: ");
+        String statusEquip = s.nextLine();
+        System.out.println();
+
+        Statement qc = connection.createStatement();
+        ResultSet resultSet = qc.executeQuery(
+                "select * from Inventory WHERE buildingLocation = '" + buildingLocationEquip + "'  " +
+                        "AND heci = '" + heciNumber + "'  AND  bayLocation = '" + bayLocationEquip + "' " );
+        int code;
+        String title;
+
+        int count = 0;
+
+        while (resultSet.next()) {
+            count++;
+            String buildingLocation = resultSet.getString("buildingLocation");
+            String heci = resultSet.getString("heci");
+            String description = resultSet.getString("description");
+            Double cost = resultSet.getDouble("cost");
+            Double bayLocation = resultSet.getDouble("bayLocation");
+            String status = resultSet.getString("status");
+            int quantity = resultSet.getInt("quantity");
+
+        }
+
+        if (count != 0) {
+            boolean executionWorked;
+            executionWorked = qc.execute("UPDATE Inventory SET status = '" + statusEquip + "' WHERE  buildingLocation = '" + buildingLocationEquip + "'  " +
+                    "AND heci = '" + heciNumber + "'  AND  bayLocation = '" + bayLocationEquip + "' " +
+                    "AND  status = '" + statusEquip + "'");
+
+
+            System.out.println("Building CHANGE INVENTORY STATUS changed successfully!");
+
+            qc.close();
+            connection.close();
+        } else {
+            System.out.println("Not found please try again!");
+
+
+        }
+    }
 
     public static boolean exit() {
         boolean keepGoing = true;
         System.out.println();
         keepGoing = false;
         return keepGoing;
-
     }
-
-
- /*public static InventoryAccount createInventoryAccount() {
-        Scanner s = new Scanner(System.in);
-        BuildingLocation buildingLocation = new BuildingLocation();
-        System.out.println();
-        System.out.print("Please input the 2 letter state and 4 digit building code: ");
-        buildingLocation.setBuildingLocation(s.nextLine());
-        return new InventoryAccount(buildingLocation, heci, description, cost, bayLocation, status, quantity
-        );
-    }
-*/
-/*
-    public static BuildingLocation newBuildingLocation(){
-        Scanner s = new Scanner(System.in);
-        System.out.println();
-        System.out.print("Plese input 2 letter State and 4 digit Building Location: ");
-        String buildId = s.nextLine();
-        System.out.println();
-        return new BuildingLocation(buildId);
-
-    }
-
- */
-    /*
-    public static InventoryAccount addInventoryAccount() {
-        Scanner s = new Scanner(System.in);
-        BuildingLocation buildingLocation = newBuildingLocation();
-
-        System.out.print("Please input the building Location number: ");
-        String buildingNumber = s.nextLine();
-        System.out.println();
-        System.out.print("Please input the equipment HECI: ");
-        String heciNumber = s.nextLine();
-        System.out.println();
-
-        System.out.print("Please input the equipment Description: ");
-        String descriptionEquip = s.nextLine();
-        System.out.println();
-
-        System.out.print("Please input the equipment Cost: ");
-        Double costEquip = s.nextDouble();
-        System.out.println();
-
-        System.out.print("Please input the equipment Bay Location: ");
-        Double bayLocationEquip = s.nextDouble();
-        System.out.println();
-
-        System.out.print("Please input the equipment Status: ");
-        String statusEquip = s.nextLine();
-        System.out.println();
-
-        System.out.print("Please input the equipment Bay Location: ");
-        Integer quantityEquip = s.nextInt();
-        System.out.println();
-
-        System.out.println("Building account created successfully!");
-        return new InventoryAccount(buildingNumber, heciNumber, descriptionEquip,
-                costEquip, bayLocationEquip, statusEquip, quantityEquip);
-    }
-     */
-
 }
 
