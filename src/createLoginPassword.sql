@@ -1,4 +1,4 @@
-CREATE DATABASE loginPassword
+
 
 CREATE TABLE loginPassword (
                                login varchar(255),

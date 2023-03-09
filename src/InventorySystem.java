@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 public class InventorySystem {
     public static void main(String[] args) throws SQLException {
-        BuildingLocation buildingLocation;
-        InventoryAccount inventoryAccount;
+
         Scanner s = new Scanner(System.in);
         boolean keepGoing = true;
 
@@ -388,8 +387,7 @@ public class InventorySystem {
         if (count != 0) {
             boolean executionWorked;
             executionWorked = qc.execute("UPDATE Inventory SET status = '" + statusEquip + "' WHERE  buildingLocation = '" + buildingLocationEquip + "'  " +
-                    "AND heci = '" + heciNumber + "'  AND  bayLocation = '" + bayLocationEquip + "' " +
-                    "AND  status = '" + statusEquip + "'");
+                    "AND heci = '" + heciNumber + "'  AND  bayLocation = '" + bayLocationEquip + "' " + "");
 
 
             System.out.println("Building CHANGE INVENTORY STATUS changed successfully!");
