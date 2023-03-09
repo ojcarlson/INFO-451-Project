@@ -3,7 +3,7 @@ public class Main {
     public static void main(String arg[]) throws SQLException {
        Connection connection = DatabaseConnection.getConnection();
 
-
+//found on the web and used as reference
 
 
         connection.close();

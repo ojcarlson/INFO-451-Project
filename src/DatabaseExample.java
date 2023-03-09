@@ -1,6 +1,6 @@
 import java.sql.*;
 public class DatabaseExample {
-
+//found on the web
         public static void main(String arg[])
         {
             Connection connection = null;

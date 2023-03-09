@@ -2,12 +2,16 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+//Olaf Carlson
+//Indiana University Southeast
+//INFO 451
+
 public class InventorySystem {
     public static void main(String[] args) throws SQLException {
 
         Scanner s = new Scanner(System.in);
         boolean keepGoing = true;
-
+        //creating console input and output
         while (keepGoing) {
             System.out.println("     Inventory Menu");
             System.out.println("_____________________________");
@@ -65,11 +69,12 @@ public class InventorySystem {
             }
         }
     }
-
+    //allows user to login with username and password
     public static void login() throws SQLException {
+        //makes connection to mySQL database mydatabase
         Connection connection = DatabaseConnection.getConnection();
         Scanner s = new Scanner(System.in);
-
+        //creates user input
         System.out.print("Please Corporate USER NAME: ");
         String searchUserName = s.nextLine();
         System.out.println();
@@ -89,14 +94,13 @@ public class InventorySystem {
         int code;
         String title;
         int count = 0;
-
+        //while loop for verifying if exist
         while (resultSet.next()) {
             count++;
             String login = resultSet.getString("login");
             String password = resultSet.getString("password");
-
-
               }
+        //if exists do the following
         if (count !=0) {
             ResultSet executionworked;
             executionworked = qc.executeQuery("select * from loginPassword WHERE login = '" + searchUserName +"' " + "AND password = '" + searchPassword + "' ");
@@ -104,11 +108,14 @@ public class InventorySystem {
             qc.close();
             connection.close();
         }
+        //if does not exist print out for user
         else {
             System.out.println("Not found please try again!");
         }
     }
+    //searches inventory with queries for buildingLocation, status, and heci,
     public static void searchInventory() throws SQLException {
+        //makes connection to mySQL database mydatabase
         Connection connection = DatabaseConnection.getConnection();
         Scanner s = new Scanner(System.in);
 
@@ -135,7 +142,7 @@ public class InventorySystem {
         int code;
         String title;
         int count = 0;
-
+        //while loop for verifying if exist
         while (resultSet.next()) {
 
             count++;
@@ -161,12 +168,15 @@ public class InventorySystem {
             qc.close();
             connection.close();
         }
+        //if does not exist print out for user
         else {
             System.out.println("Not found please try again!");
         }
     }
 
+    //creates inventory account with all table inputs
     public static void createInventoryAccount() throws SQLException {
+        //makes connection to mySQL database mydatabase
         Connection connection = DatabaseConnection.getConnection();
 
         Scanner s = new Scanner(System.in);
@@ -205,10 +215,12 @@ public class InventorySystem {
 
         st.close();
         connection.close();
-        //return new InventoryAccount(heciNumber, descriptionEquip,
-        //       costEquip, bayLocationEquip, statusEquip, quantityEquip, buildingLocation);
-    }
+         }
+
+         //removes table in Inventory
+
     public static void removeInventory() throws SQLException {
+        //makes connection to mySQL database mydatabase
         Connection connection = DatabaseConnection.getConnection();
         Scanner s = new Scanner(System.in);
 
@@ -226,7 +238,7 @@ public class InventorySystem {
         int code;
         String title;
         int count = 0;
-
+        //while loop for verifying if exist
         while (resultSet.next()) {
             count++;
             String buildingLocation = resultSet.getString("buildingLocation");
@@ -245,12 +257,14 @@ public class InventorySystem {
                 qc.close();
                 connection.close();
             }
+            //if does not exist print out for user
             else {
                 System.out.println("Not found please try again!");
             }
     }
 
     public static void displayTables() throws SQLException {
+        //makes connection to mySQL database mydatabase
         Connection connection = DatabaseConnection.getConnection();
         Statement statement;
         statement = connection.createStatement();
@@ -259,7 +273,7 @@ public class InventorySystem {
                 "select * from Inventory");
         int code;
         String title;
-
+        //while loop for verifying if exist
         while (resultSet.next()) {
             String buildingLocation = resultSet.getString("buildingLocation");
             String heci = resultSet.getString("heci");
@@ -281,7 +295,7 @@ public class InventorySystem {
     }
 
     public static void changeInventoryQty() throws SQLException {
-
+        //makes connection to mySQL database mydatabase
         Connection connection = DatabaseConnection.getConnection();
 
         Scanner s = new Scanner(System.in);
@@ -314,6 +328,7 @@ public class InventorySystem {
         int code;
         String title;
         int count =0;
+        //while loop for verifying if exist
         while (resultSet.next()) {
             count++;
             String buildingLocation = resultSet.getString("buildingLocation");
@@ -335,13 +350,14 @@ public class InventorySystem {
             qc.close();
             connection.close();
         }
+        //if does not exist print out for user
         else {
             System.out.println("Not found please try again!");
         }
     }
 
     public static void changeInventoryStatus() throws SQLException {
-
+        //makes connection to mySQL database mydatabase
         Connection connection = DatabaseConnection.getConnection();
 
         Scanner s = new Scanner(System.in);
@@ -371,7 +387,7 @@ public class InventorySystem {
         String title;
 
         int count = 0;
-
+        //while loop for verifying if exist
         while (resultSet.next()) {
             count++;
             String buildingLocation = resultSet.getString("buildingLocation");
@@ -394,13 +410,14 @@ public class InventorySystem {
 
             qc.close();
             connection.close();
+            //if does not exist print out for user
         } else {
             System.out.println("Not found please try again!");
 
 
         }
     }
-
+    //exits program
     public static boolean exit() {
         boolean keepGoing = true;
         System.out.println();
