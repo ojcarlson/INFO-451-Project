@@ -19,7 +19,7 @@ How to run the code in it's current form:
 
 Will need an IDE to run the code in and establish the backend in Docker creating mysql database mydatabase with table Inventory includes buildingLoction, heci, description, cost, bayLocation, status and quantity.  Table login/password that includes login and password table.
 
-The software in current form is in console program and the GUI will be developed by final presentation with option to create return shipping document to return equipment.  Here is your selection at console program.
+The software in current form is in console program and the GUI will be developed by final presentation with option to create return shipping document to return equipment.  Here is your selection at console program.  Run InventorySystem.java to start program.
 
  Inventory Menu
 _____________________________
